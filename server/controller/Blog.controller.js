@@ -119,7 +119,7 @@ export const getSingleBlog = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid Id" });
     }
     const blog = await Blog.findById(blogId);
-    
+
     if (!blog) {
       return res
         .status(404)
@@ -135,36 +135,73 @@ export const getSingleBlog = async (req, res, next) => {
   }
 };
 
-export const getBlogByTopic = async(req,res,next)=>{
+export const getBlogByTopic = async (req, res, next) => {
   const reqTopic = req.params.topic; // get the topic from the url
   try {
-    const blogs = await Blog.find({topic : new RegExp(reqTopic, "i")}) // here "i" means case insensitive. so it will match the topic with the case insensitive. regExp is a regular expression object that is used to match the topic with the case insensitive.
-    if (!blogs || blogs.length === 0){
-      return res.status(404).json({success:false,message:`No blogs found with topic:${reqTopic}`})
+    const blogs = await Blog.find({ topic: new RegExp(reqTopic, "i") }); // here "i" means case insensitive. so it will match the topic with the case insensitive. regExp is a regular expression object that is used to match the topic with the case insensitive.
+    if (!blogs || blogs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No blogs found with topic:${reqTopic}`,
+      });
     }
-    return res.status(200).json({success:true,message:"Blogs found...", data:blogs}) //data:blogs means we are sending the blogs data to the client.
+    return res
+      .status(200)
+      .json({ success: true, message: "Blogs found...", data: blogs }); //data:blogs means we are sending the blogs data to the client.
   } catch (error) {
-    return res.status(500).json({success:false, message:"Internal server Error...."})
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server Error...." });
   }
+};
 
-}
-
-export const getBlogsByQuery = async (req, res,next)=>{
+export const getBlogsByQuery = async (req, res, next) => {
   const reqTopic = req.query.topic;
 
-  try{
-    const blogs = await Blog.find({topic: new RegExp(reqTopic, "i")})
-    if (!blogs || blogs.length === 0){
-      return res.status(404).json({success:false, message:`No blogs found with topic:${reqTopic}`})
+  try {
+    const blogs = await Blog.find({ topic: new RegExp(reqTopic, "i") });
+    if (!blogs || blogs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No blogs found with topic:${reqTopic}`,
+      });
     }
-    return res.status(200).json({success:true, message:"Blogs found...", data:blogs})
-
-  }catch(error){
-    return res.status(500).json({success:false,message:"Internal server Error...."})
+    return res
+      .status(200)
+      .json({ success: true, message: "Blogs found...", data: blogs });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server Error...." });
   }
-  
-}
+};
 
-export const getBlogsByMultipleTopics = async(req,res,next )=>{
-  console.log("multple topics");
-}
+export const getBlogsByMultipleTopics = async (req, res, next) => {
+  const { topic } = req.query;
+  try {
+    let query = {}; // initialize an empty query object because find method takes an object as a parameter. and we will add the topics to this object.
+    query.topic = {
+      $in: topic.map((currElement) => new RegExp(currElement, "i")),
+      // here we are using $in beacuse it will run a query in such a way that we will get an object.
+      //The $in operator is used to find documents where a specified field's value matches any value in a given array.
+      //It works similarly to saying:
+      //"Give me all documents where this field equals any of these values."
+    };
+    const blogs = await Blog.find(query); // find method takes an object as a parameter. so we are passing the query object to the find method.
+    if (!blogs || blogs.length === 0) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: `No blogs found with topics: ${topic}`,
+        });
+    }
+    return res
+      .status(200)
+      .json({ success: true, message: "Blogs found...", data: blogs });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server Error" });
+  }
+};
