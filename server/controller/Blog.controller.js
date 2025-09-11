@@ -91,7 +91,10 @@ export const deleteBlog = async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(blogId)) {
       return res.status(400).json({ success: false, message: "Invalid Id" });
     }
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogId); // find the blog by id from the database. mongodb method to find a document by its unique identifier (blogId).
+    //If it finds a matching document → it returns that document object.
+    //If it does not find a match → it simply returns null.
+    //that is why we have to provide a error message if blog is not found with that id. otherwise it will return null.
     if (!blog) {
       return res
         .status(404)
