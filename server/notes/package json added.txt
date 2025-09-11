@@ -1,0 +1,10 @@
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+
+  "type": "module", //this is added for changing type from common js to module js
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "nodemon index.js" // this is a nodemon npm package for restarting the server
+  },

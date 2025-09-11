@@ -1,0 +1,3 @@
+A MongoDB connection URI (Uniform Resource Identifier) is a specially formatted string used by MongoDB clients (like 
+Mongoose in Node.js) to specify how to connect to a MongoDB database. It contains all the information needed to establish
+the connection, such as the database server address, port, credentials, database name, and optional parameters.

@@ -1,0 +1,28 @@
+npm init -y
+npm i express nodemon mongoose bcryptjs cookie-parser cors dotenv jsonwebtoken 
+
+npm i express → you’re installing Express.js, the most popular web framework for Node.js.
+
+npm i nodemon → you’re installing nodemon, a developer tool that automatically restarts your Node.js app                 whenever you change a file.
+
+npm i mongoose → installs Mongoose, which is an ODM (Object Data Modeling) library for MongoDB in Node.js.
+
+npm i bcryptjs → installs bcryptjs, a library for hashing passwords in Node.js.
+
+npm i cookie-parser → installs cookie-parser, a middleware for Express that makes it super easy to read                       and set cookies in your Node.js app.
+
+npm i cors → installs the CORS (Cross-Origin Resource Sharing) middleware for Express.
+             Normally, browsers block requests from one origin (domain/port) to another.
+            -Your frontend (React) runs on http://localhost:5173
+            -Your backend (Express) runs on http://localhost:3000
+             “Blocked by CORS policy” 🚫
+	    -That’s where cors middleware steps in: it tells the browser “Hey, I allow requests from that               other origin.”
+             
+
+npm i dotenv → dotenv lets you load environment variables from a hidden .env file into process.env.
+               It’s a way to keep secrets (API keys, DB passwords, JWT secrets, etc.) out of your code.
+               The .env file is usually kept out of GitHub (via .gitignore) so you don’t accidentally                    leak credentials.
+
+npm i jsonwebtoken → the package that lets you create and verify JSON Web Tokens (JWTs), which are                      commonly used for authentication in web apps.
+
+In the MVC (Model-View-Controller) pattern, a controller in a Node.js Express application is the component responsible for handling incoming HTTP requests, processing data via models, and sending back responses or rendering views. It acts as an intermediary between the model (data and business logic) and the view (UI or response).
