@@ -134,3 +134,37 @@ export const getSingleBlog = async (req, res, next) => {
       .json({ success: false, message: "server error...!" });
   }
 };
+
+export const getBlogByTopic = async(req,res,next)=>{
+  const reqTopic = req.params.topic; // get the topic from the url
+  try {
+    const blogs = await Blog.find({topic : new RegExp(reqTopic, "i")}) // here "i" means case insensitive. so it will match the topic with the case insensitive. regExp is a regular expression object that is used to match the topic with the case insensitive.
+    if (!blogs || blogs.length === 0){
+      return res.status(404).json({success:false,message:`No blogs found with topic:${reqTopic}`})
+    }
+    return res.status(200).json({success:true,message:"Blogs found...", data:blogs}) //data:blogs means we are sending the blogs data to the client.
+  } catch (error) {
+    return res.status(500).json({success:false, message:"Internal server Error...."})
+  }
+
+}
+
+export const getBlogsByQuery = async (req, res,next)=>{
+  const reqTopic = req.query.topic;
+
+  try{
+    const blogs = await Blog.find({topic: new RegExp(reqTopic, "i")})
+    if (!blogs || blogs.length === 0){
+      return res.status(404).json({success:false, message:`No blogs found with topic:${reqTopic}`})
+    }
+    return res.status(200).json({success:true, message:"Blogs found...", data:blogs})
+
+  }catch(error){
+    return res.status(500).json({success:false,message:"Internal server Error...."})
+  }
+  
+}
+
+export const getBlogsByMultipleTopics = async(req,res,next )=>{
+  console.log("multple topics");
+}
