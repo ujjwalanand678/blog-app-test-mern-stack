@@ -2,6 +2,7 @@ import express from "express"; // import express framework
 import dotenv from "dotenv"; // import dotenv to manage environment variables
 import mongoose from "mongoose"; // import mongoose for MongoDB object modeling
 import BlogRoutes from "./routes/Blog.routes.js"; // import blog routes
+import AuthRoutes from "./routes/Auth.routes.js";
 
 const app = express(); // The line const app = express() in Node.js initializes a new Express application instance that can be used to define HTTP routes, middleware, and server configuration.
 //express() returns an object that represents your web application, typically stored in a variable called app.
@@ -42,6 +43,7 @@ app.use(express.json()); // The line app.use(express.json()) in a Node.js Expres
 app.use("/api/v1/blog", BlogRoutes); // The line app.use("/api/blog", blogRoutes); mounts the blogRoutes router on the /api/blog path in the Express application.
 //This means that any routes defined in blogRoutes will be accessible under the /api/blog URL prefix.
 //For example, if blogRoutes defines a route for GET /createblog, it will be accessible at /api/blog/createblog in the main app.
+app.use("/api/v1/auth", AuthRoutes)
 
 connectDB().then(() => {
   app.listen(port, () => {
