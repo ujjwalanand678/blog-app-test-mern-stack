@@ -25,7 +25,7 @@ export const userRegister = async (req, res, next) => {
    //now we will store this hashed password in the database instead of plain text password.
    //so that even if someone hacks the database, they cannot see the actual passwords.
 
-    user = new User({ name, email, hashing : password, phone, profilePic });
+    user = new User({ name, email,  password : hashing , phone, profilePic });
     await user.save();
     return res
       .status(200)
