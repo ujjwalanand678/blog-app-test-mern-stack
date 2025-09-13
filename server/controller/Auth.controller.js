@@ -34,3 +34,7 @@ export const userRegister = async (req, res, next) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+export const userLogin = async (req, res, next)=>{
+    console.log("login api hit");
+}
