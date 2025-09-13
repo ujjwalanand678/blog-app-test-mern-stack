@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     required: true, // Email is required for each user
     unique: true, // Ensure email is unique across users , cannot have duplicate emails
   },
-  pasword: {
+  password: {
     type: String ,
     required: true, // Password is required for each user
   },
