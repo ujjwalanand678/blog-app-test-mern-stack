@@ -21,6 +21,17 @@ const UserSchema = new mongoose.Schema({
     default : "user", // Default role is "user"
   },
   profilePic : String, // Profile picture URL is optional
+  author : {
+          id : {
+              type : mongoose.Schema.Types.ObjectId,
+              ref : "User",
+              required: true
+          },
+           name : {
+              type : String,
+              required: true
+           },
+      }
 });
 
 export default mongoose.model("User" , UserSchema) //  is used to define and export a Mongoose model named "User " based on the UserSchema. This model represents a MongoDB collection and provides an interface for interacting with that collection using the defined schema structure.
