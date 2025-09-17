@@ -1,5 +1,6 @@
 import User from "../model/User.model.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken"
 
 export const userRegister = async (req, res, next) => {
   const { name, email, password, phone, profilePic } = req.body;
@@ -33,6 +34,12 @@ export const userRegister = async (req, res, next) => {
   }
 };
 
+const createJwtToken = (user)=>{
+return jwt.sign({id : user._id , role: user.role, name: user.name}, process.env.JWT_TOKEN_KEY,{expiresIn: "1d"}) 
+// it will create a token with the user id and role and name as payload and sign it with the secret key and set the expiry time to 1 day.
+// we can store any other information in the payload as well.
+}
+
 export const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -51,10 +58,14 @@ export const userLogin = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "Invalid password" });
     }
+    const token = createJwtToken(user)
+    const { password: hashedPassword, role, ...rest}= user._doc; 
+    // we dont want to send password and role in response. so we are using destructuring to exclude them. {...rest} will contain all the other fields except password and role.
     return res
       .status(200)
-      .json({ success: true, message: "User logged in successfully" });
+      .json({ success: true, message: "User logged in successfully" , token , role, data: rest});
   } catch (error) {
+     console.error("Login Error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
