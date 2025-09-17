@@ -5,8 +5,19 @@ export const createBlog = async (req, res, next) => {
   // console.log(req.body); // log the request body to the console for debugging purposes from  postman
   const { title, image, content, topic } = req.body; // destructure title, image, content, and topic from the request body
 
+  // userName and userId are generated after the blog is created.
+  // we will get the user id from the req object which we have set in the authorize middleware after verifying the token.
+  const userName = req.name;
+  const userId = req.userId;
+
   try {
-    const data = new Blog({ title, image, content, topic }); // create a new instance of the Blog model with the provided data
+    const data = new Blog({
+      title,
+      image,
+      content,
+      topic,
+      author: { id: userId, name: userName },
+    }); // create a new instance of the Blog model with the provided data
     await data.save(); // save the new blog post to the database
 
     return res
@@ -44,6 +55,12 @@ export const editBlog = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Blog not found" });
     }
+// we have to check whether the user who is trying to edit the blog is the author of the blog or not. if the user is not the author of the blog , then we will return an error message "you are not authorized to edit this blog".
+if (blog.author.id.toString() !== req.userId){
+  return res.status(403).json({success : false , message : "You are not authorized to edit this blog"})
+}
+//Authenticated but lacks permission to proceed => 403 Forbidden => Authenticated, but not allowed to perform this action.
+
     const updateBlog = await Blog.findByIdAndUpdate(
       blogId,
       { $set: req.body }, //This part says “take whatever fields come from the request body, and set them on the blog.”
@@ -189,19 +206,15 @@ export const getBlogsByMultipleTopics = async (req, res, next) => {
     };
     const blogs = await Blog.find(query); // find method takes an object as a parameter. so we are passing the query object to the find method.
     if (!blogs || blogs.length === 0) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: `No blogs found with topics: ${topic}`,
-        });
+      return res.status(404).json({
+        success: false,
+        message: `No blogs found with topics: ${topic}`,
+      });
     }
     return res
       .status(200)
       .json({ success: true, message: "Blogs found...", data: blogs });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Server Error" });
+    return res.status(500).json({ success: false, message: "Server Error" });
   }
 };

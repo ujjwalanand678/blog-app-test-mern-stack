@@ -21,10 +21,17 @@ const BlogSchema = new mongoose.Schema({
         type :Date ,
         default : Date.now
     },
-//     user : {
-//         id : ,
-//          name :,
-//     }
+    author : {
+        id : {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "User",
+            required: true
+        },
+         name : {
+            type : String,
+            required: true
+         },
+    }
 
  })
 
