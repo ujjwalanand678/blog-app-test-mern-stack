@@ -55,12 +55,17 @@ export const editBlog = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Blog not found" });
     }
-// we have to check whether the user who is trying to edit the blog is the author of the blog or not. if the user is not the author of the blog , then we will return an error message "you are not authorized to edit this blog".
-console.log(blog.author._id, req.userId);
-if (blog.author.id !== req.userId){
-  return res.status(403).json({success : false , message : "You are not authorized to edit this blog"})
-}
-//Authenticated but lacks permission to proceed => 403 Forbidden => Authenticated, but not allowed to perform this action.
+    // we have to check whether the user who is trying to edit the blog is the author of the blog or not. if the user is not the author of the blog , then we will return an error message "you are not authorized to edit this blog".
+    // console.log(blog.author.id.toString(), req.userId);
+    if (blog.author.id.toString() !== req.userId) {
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "You are not authorized to edit this blog",
+        });
+    }
+    //Authenticated but lacks permission to proceed => 403 Forbidden => Authenticated, but not allowed to perform this action.
 
     const updateBlog = await Blog.findByIdAndUpdate(
       blogId,
@@ -99,7 +104,6 @@ export const getAllBlogs = async (req, res, next) => {
     return res.status(500).json({ success: false, message: "Server error..." });
   }
 };
-
 
 export const deleteBlog = async (req, res, next) => {
   const blogId = req.params.id; // get the blog id from the url
